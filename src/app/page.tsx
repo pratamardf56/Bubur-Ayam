@@ -4,6 +4,10 @@ import { useState } from 'react';
 import styles from './page.module.css';
 import ProductCard from '../components/ProductCard';
 
+const basePath = process.env.NODE_ENV === 'production' ? '/Bubur-Ayam' : '';
+const getImageUrl = (url: string) => url.startsWith('/') ? `${basePath}${url}` : url;
+
+
 // Dummy data for products
 const products = [
   {
@@ -27,7 +31,7 @@ const products = [
     name: 'Sate Usus',
     price: 3000,
     description: 'Sate usus ayam bumbu kuning meresap sempurna.',
-    image: '/images/sate_usus.jpg',
+    image: getImageUrl('/images/sate_usus.jpg'),
     category: 'pelengkap'
   },
   {
@@ -35,7 +39,7 @@ const products = [
     name: 'Sate Telur Puyuh',
     price: 3000,
     description: 'Sate telur puyuh bacem yang manis dan gurih.',
-    image: '/images/sate_puyuh.jpg',
+    image: getImageUrl('/images/sate_puyuh.jpg'),
     category: 'pelengkap'
   },
   {
@@ -43,7 +47,7 @@ const products = [
     name: 'Rempeyek',
     price: 5000,
     description: 'Rempeyek kacang renyah dan gurih, pelengkap sempurna untuk semangkuk bubur ayam.',
-    image: '/images/rempeyek.jpg',
+    image: getImageUrl('/images/rempeyek.jpg'),
     category: 'pelengkap'
   },
   {
@@ -51,7 +55,7 @@ const products = [
     name: 'Teh Hangat / Manis',
     price: 3000,
     description: 'Teh manis hangat yang pas untuk menemani makan bubur.',
-    image: '/images/teh_hangat.jpg',
+    image: getImageUrl('/images/teh_hangat.jpg'),
     category: 'minuman'
   },
   {
