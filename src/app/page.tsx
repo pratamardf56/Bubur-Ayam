@@ -75,7 +75,7 @@ export default function Home() {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        return prev.map(item => 
+        return prev.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
@@ -101,9 +101,36 @@ export default function Home() {
   const [showReceipt, setShowReceipt] = useState(false);
 
   // Default Shopee Food link logic (dummy link for now)
-  const handleShopeeFoodOrder = () => {
-    if (cart.length === 0) return;
-    setShowReceipt(true);
+  const handleShopeeFoodOrder = async () => {
+    if (cart.length === 0) {
+      alert("Keranjang masih kosong!");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/pesan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cart,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Pesanan berhasil disimpan ke database!");
+        setShowReceipt(true);
+      } else {
+        alert(result.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menghubungi server.");
+    }
   };
 
   const handlePrint = () => {
@@ -124,7 +151,7 @@ export default function Home() {
           <h2 className={styles.sectionTitle}>Menu Utama</h2>
           <div className={styles.productGrid}>
             {products.filter(p => p.category === 'utama').map(product => (
-              <ProductCard 
+              <ProductCard
                 key={product.id}
                 {...product}
                 onAddToCart={handleAddToCart}
@@ -135,7 +162,7 @@ export default function Home() {
           <h2 className={styles.sectionTitle}>Menu Pelengkap</h2>
           <div className={styles.productGrid}>
             {products.filter(p => p.category === 'pelengkap').map(product => (
-              <ProductCard 
+              <ProductCard
                 key={product.id}
                 {...product}
                 onAddToCart={handleAddToCart}
@@ -146,7 +173,7 @@ export default function Home() {
           <h2 className={styles.sectionTitle}>Minuman</h2>
           <div className={styles.productGrid}>
             {products.filter(p => p.category === 'minuman').map(product => (
-              <ProductCard 
+              <ProductCard
                 key={product.id}
                 {...product}
                 onAddToCart={handleAddToCart}
@@ -158,7 +185,7 @@ export default function Home() {
         <aside className={styles.sidebar}>
           <div className={styles.cart}>
             <h2 className={styles.cartTitle}>Pesanan Anda</h2>
-            
+
             {cart.length === 0 ? (
               <div className={styles.emptyCart}>
                 <p>Keranjang masih kosong.</p>
@@ -176,7 +203,7 @@ export default function Home() {
                       <span className={styles.cartItemPrice}>
                         Rp {(item.price * item.quantity).toLocaleString('id-ID')}
                       </span>
-                      <button 
+                      <button
                         className={styles.removeBtn}
                         onClick={() => handleRemoveFromCart(item.id)}
                       >
@@ -185,21 +212,21 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
-                
+
                 <div className={styles.totalRow}>
                   <span>Total</span>
                   <span className={styles.totalPrice}>Rp {total.toLocaleString('id-ID')}</span>
                 </div>
               </div>
             )}
-            
-            <button 
+
+            <button
               className={styles.shopeeButton}
               onClick={handleShopeeFoodOrder}
             >
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" 
-                alt="Shopee" 
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg"
+                alt="Shopee"
                 className={styles.shopeeIcon}
               />
               Pesan & Cetak Struk
